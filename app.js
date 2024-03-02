@@ -4,6 +4,7 @@ const app=express();
 const cors=require("cors");
 
 const arr=[] ; // in memory database
+let feedbackData=[];
 
 function makeid(length) {
     let result = '';
@@ -66,6 +67,60 @@ res.json({
     message:"failed"
 })
     
+})
+
+
+// feedback apis
+
+app.post("/feedback",(req,res)=>{
+    // we will save the users data 
+    let id=makeid(20)
+    req.body.id= id
+    
+    feedbackData.push(req.body);
+    res.json({
+        message:"feedback stored successffully",
+        id
+
+    })
+
+})
+
+app.put("/feedback",(req,res)=>{
+    // we will save the users data 
+    
+    let id=req.body.id
+    // filter out old data 
+    feedbackData=feedbackData.filter(ele=>ele.id!=id) 
+    // push new data
+    feedbackData.push(req.body);
+    res.json({
+        message:"feedback edited successffully"
+
+    })
+
+})
+
+app.delete("/feedback/:id",(req,res)=>{
+    // we will save the users data 
+    let id=req.params.id
+    feedbackData=feedbackData.filter(ele=>ele.id!=id)
+    res.json({
+        message:"feedback deleted successffully"
+
+    })
+
+})
+
+app.get("/feedback",(req,res)=>{
+    // we will save the users data 
+  
+    res.json({
+        message:"success",
+        data:feedbackData,
+
+    })
+
 })
 
 app.listen(8080,function(){
